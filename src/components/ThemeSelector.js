@@ -1,27 +1,29 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import { saveTheme } from '../redux/features/themeSlice';
+// ThemeSelector.js
+import React, { useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setTheme } from '../redux/features/themeSlice';
 
 const ThemeSelector = () => {
+  const theme = useSelector(state => state.theme);
   const dispatch = useDispatch();
 
   const handleChange = (event) => {
-    dispatch(saveTheme(event.target.value));
+    dispatch(setTheme(event.target.value));
   };
 
+  const colorOptions = useMemo(() => {
+    return ['red', 'blue', 'green', 'purple', 'yellow'];
+  }, []);
+
   return (
-    <FormControl fullWidth>
-      <InputLabel id="theme-selector-label">Theme Selection</InputLabel>
-      <Select
-        labelId="theme-selector-label"
-        onChange={handleChange}>
-        <MenuItem value="default">Default</MenuItem>
-        <MenuItem value="dark">Dark</MenuItem>
-        <MenuItem value="light">Light</MenuItem>
-      </Select>
-    </FormControl>
+    <div>
+      <select value={theme} onChange={handleChange}>
+        {colorOptions.map(color => (
+          <option key={color} value={color}>{color}</option>
+        ))}
+      </select>
+    </div>
   );
 };
 
-export default ThemeSelector;
+export default React.memo(ThemeSelector);
